@@ -1,0 +1,17 @@
+{
+  "name": "she",
+  "version": "0.0.0",
+  "description": "SHE",
+  "main": "SHE.js",
+  "author": {
+    "name": ""
+  },
+  "devDependencies": {
+    "eslint": "^8.21.0"
+  },
+  "eslintConfig": {},
+  "dependencies": {
+    "@colors/colors": "^1.6.0",
+    "prompt-sync": "^4.2.0"
+  }
+}
