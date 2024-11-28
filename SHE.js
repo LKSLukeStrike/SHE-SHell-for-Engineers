@@ -515,12 +515,30 @@ function evalAstPhrase(_phrase) {
 
 // Exec Reserved Functions
 const ExecReserved_ = {
-    ".echo":        execEcho,       // .echo args...
-    ".join":        execJoin,       // .join separator args...
-    ".add":         execAdd,        // .add args...
+    ".echo":        execEcho,       // echo args...
+    ".e":           execEcho,       // alias
+    ".join":        execJoin,       // join separator args...
+    ".j":           execJoin,       // alias
+    ".add":         execAdd,        // add/positive args...
     ".+":           execAdd,        // alias
-    ".sub":         execSub,        // .sub args...
+    ".sub":         execSub,        // substact/negative args...
     ".-":           execSub,        // alias
+    ".mul":         execMul,        // multiply args...
+    ".*":           execMul,        // alias
+    ".div":         execDiv,        // divide args...
+    "./":           execDiv,        // alias
+    ".mod":         execMod,        // modulo args...
+    ".%":           execMod,        // alias
+    ".pow":         execPow,        // power args...
+    ".^":           execPow,        // alias
+    ".sqr":         execSqr,        // squareroot args...
+    ".x":           execSqr,        // alias
+    ".min":         execMin,        // minimum args...
+    ".<":           execMin,        // alias
+    ".max":         execMax,        // maximum args...
+    ".>":           execMax,        // alias
+    ".avg":         execAvg,        // average args...
+    ".|":           execAvg,        // alias
 }
 
 
@@ -553,20 +571,84 @@ function execJoin() {
 }
 
 function execAdd() {
-    return execMath(
-        (_back, _arg1)  => {return Math.abs(Number(_arg1))},
-        (_back, _arg2n) => {return _back + Number(_arg2n)}
+    return execMath2N(
+        (_back, _arg1)  => {return Math.abs(_arg1)},
+        (_back, _arg2n) => {return _back + _arg2n}
     )
 }
 
 function execSub() {
-    return execMath(
-        (_back, _arg1)  => {return 0 - Math.abs(Number(_arg1))},
-        (_back, _arg2n) => {return _back - Number(_arg2n)}
+    return execMath2N(
+        (_back, _arg1)  => {return 0 - Math.abs(_arg1)},
+        (_back, _arg2n) => {return _back - _arg2n}
     )
 }
 
-function execMath(_doarg1, _doarg2n) { // apply math functions depending of the number of arguments
+function execMul() {
+    return execMath2N(
+        (_back, _arg1)  => {return _arg1},
+        (_back, _arg2n) => {return _back * _arg2n}
+    )
+}
+
+function execDiv() {
+    return execMath2N(
+        (_back, _arg1)  => {return _arg1},
+        (_back, _arg2n) => {return _back / _arg2n}
+    )
+}
+
+function execMod() {
+    return execMath2N(
+        (_back, _arg1)  => {return _arg1},
+        (_back, _arg2n) => {return _back % _arg2n}
+    )
+}
+
+function execPow() {
+    return execMath2N(
+        (_back, _arg1)  => {return _arg1},
+        (_back, _arg2n) => {return Math.pow(_back, _arg2n)}
+    )
+}
+
+function execSqr() {
+    return execMath1N(
+        (_back, _arg1n)  => {return Math.sqrt(_arg1n)}
+    )
+}
+
+function execMin() {
+    return execMath2N(
+        (_back, _arg1)  => {return _arg1},
+        (_back, _arg2n) => {return _back < _arg2n ? _back : _arg2n}
+    )
+}
+
+function execMax() {
+    return execMath2N(
+        (_back, _arg1)  => {return _arg1},
+        (_back, _arg2n) => {return _back > _arg2n ? _back : _arg2n}
+    )
+}
+
+function execAvg() {
+    return execMath2N(
+        (_back, _arg1)  => {return _arg1},
+        (_back, _arg2n) => {return (_back + _arg2n) / 2}
+    )
+}
+
+function execMath1N(_doarg1n) { // apply math functions depending of the number of arguments
+    evalArgs()
+    let _back = 0
+    for (_arg1n of getArgs().slice(1)) {
+        _back = _doarg1n(_back, Number(_arg1n))
+    }
+    return _back.toString()
+}
+
+function execMath2N(_doarg1, _doarg2n) { // apply math functions depending of the number of arguments
     evalArgs()
     let _back = 0
     let _arg1 = getArgN(1) // first arg
@@ -575,10 +657,10 @@ function execMath(_doarg1, _doarg2n) { // apply math functions depending of the 
         if (notEmpty(_arg2)) { // math all
             _back = Number(_arg1)
             for (_arg2n of getArgs().slice(2)) {
-                _back = _doarg2n(_back, _arg2n)
+                _back = _doarg2n(_back, Number(_arg2n))
             }
         } else { // math one
-            _back = _doarg1(_back, _arg1)
+            _back = _doarg1(_back, Number(_arg1))
         }
     }
     return _back.toString()
