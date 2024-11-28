@@ -431,6 +431,7 @@ const StackVars_ = new Stack() // defined variables
 const StackBack_ = new Stack() // return value
 
 // Eval Utils
+// Env
 function pushEnv() { // push a new env level and return the level
     const _result = StackBack_.length() + 1
     StackArgs_.push([])
@@ -449,46 +450,76 @@ function popEnv() { // pop last env and return the last return value
     return _result
 }
 
+// Args
 function getArgs() {
     return StackArgs_.get()
 }
+
 function getArgN(_n) {
     return getArgs()[_n]
 }
+
 function getArg0() {
     return getArgN(0)
 }
+
 function setArgs(_value) {
     return StackArgs_.set(_value)
 }
+
 function setArgN(_n, _value) {
     const _args = getArgs()
     _args[_n] = _value
     setArgs(_args)
     return getArgN(_n)
 }
+
 function setArg0(_value) {
     return setArgN(0, _value)
 }
+
 function evalArgs() {
     for (_n in getArgs()) {
         evalArgN(_n)
     }
     return getArgs()
 }
+
 function evalArgN(_n) {
     return setArgN(_n, evalAst(getArgN(_n)))
 }
+
 function evalArg0() {
     return evalArgN(0)
 }
 
+// Back
 function getBack() {
     return StackBack_.get()
 }
 function setBack(_value) {
     return StackBack_.set(_value)
 }
+
+// Vars
+function setVar(_var, _value) {
+    let _vars = StackVars_.get()
+    _vars[_var] = _value
+    return StackVars_.set(_vars)
+}
+
+function getVar(_var) {
+    let _back = ""
+    let _stackvarsreversed = StackVars_.value().toReversed()
+    for (_vars of _stackvarsreversed) { // try to find the var at any top down level
+        if (_vars.hasOwnProperty(_var)) {
+            _back = _vars[_var]
+            break
+        }
+    }
+    return _back
+}
+
 
 // Eval
 function evalAst(_ast) {
@@ -519,6 +550,10 @@ const ExecReserved_ = {
     ".e":           execEcho,       // alias
     ".join":        execJoin,       // join separator args...
     ".j":           execJoin,       // alias
+    ".set":         execSet,        // set value vars...
+    ".!":           execSet,        // alias
+    ".get":         execGet,        // get vars...
+    ".@":           execGet,        // alias
     ".add":         execAdd,        // add/positive args...
     ".+":           execAdd,        // alias
     ".sub":         execSub,        // substact/negative args...
@@ -566,6 +601,28 @@ function execJoin() {
     let _arg1 = getArgN(1) // separator
     if (notEmpty(_arg1)) {
         _back = getArgs().slice(2).join(_arg1)
+    }
+    return _back
+}
+
+function execSet() {
+    evalArgs()
+    let _back = ""
+    let _arg1 = getArgN(1) // value
+    if (notEmpty(_arg1)) {
+        _back = _arg1
+        for (_var of getArgs().slice(2)) {
+            setVar(_var, _back)
+        }
+    }
+    return _back
+}
+
+function execGet() {
+    evalArgs()
+    let _back = ""
+    for (_var of getArgs().slice(1)) {
+        _back = getVar(_var)
     }
     return _back
 }
