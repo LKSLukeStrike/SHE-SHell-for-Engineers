@@ -17,3 +17,7 @@
 .! 10 #a
 .! 20 #b
 .e "sum:" #a + #b = (.+ (.@ #a) (.@ #b))
+.e .t (.t) (.f)
+.e (.? 3)
+.e (.? bleu blanc rouge)
+.# ffff 1a

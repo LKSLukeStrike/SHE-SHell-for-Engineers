@@ -1,5 +1,4 @@
-// TO FIX
-// escape not working (double backslash)
+// TOFIX
 
 const NodeFS_       = require("node:fs")
 const Colors_       = require("@colors/colors/safe")
@@ -56,6 +55,10 @@ function argDefault(_index, _default) {
 
 function notEmpty(_thing) {
     return _thing != undefined
+}
+
+function notNumber(_thing) {
+    return Number.isNaN(Number(_thing))
 }
 
 
@@ -136,7 +139,6 @@ let   SingleOCnt_  = 0 // number of TokenOBlock_ in a single
 let   SHECodeIdx_  = 0
 
 function parseSource() {
-    // let _yesoblock = TokenState_ == StateOBlock_
     TokenState_    = StateIgnore_
     let _phrases   = undefined
     let _phrase    = undefined
@@ -150,7 +152,7 @@ function parseSource() {
     }
 
     function _pushChar() { // push a char into a word
-        // _logState("_pushChar")
+        _logState("_pushChar")
         if (notEmpty(_char)) {
             if (notEmpty(_word)) {
                 _word = _word + _char
@@ -159,10 +161,11 @@ function parseSource() {
             }
             _char = undefined
         }
-        // _logState("_pushChar")
+        _logState("_pushChar")
     }
+
     function _pushWord() { // push a word into a phrase
-        // _logState("_pushWord")
+        _logState("_pushWord")
         _pushChar()
         if (notEmpty(_word)) {
             if (notEmpty(_phrase)) {
@@ -172,10 +175,11 @@ function parseSource() {
             }
             _word = undefined
         }
-        // _logState("_pushWord")
+        _logState("_pushWord")
     }
+
     function _pushPhrase() { // push a phrase into phrases
-        // _logState("_pushPhrase")
+        _logState("_pushPhrase")
         _pushWord()
         if (notEmpty(_phrase)) {
             if (notEmpty(_phrases)) {
@@ -185,7 +189,7 @@ function parseSource() {
             }
             _phrase = undefined
         }
-        // _logState("_pushPhrase")
+        _logState("_pushPhrase")
     }
     
     while (SHECodeIdx_ < SHECodeSrc_.length) {
@@ -214,7 +218,6 @@ function parseSource() {
                         break
 
                         case StateCBlock_:
-                            // SHECodeIdx_++ // skip the TokenCBlock_
                             if (TokenOBLvl_ > 0) {
                                 TokenOBLvl_-- // close the block
                                 _pushPhrase()
@@ -247,15 +250,7 @@ function parseSource() {
                             TokenState_ = StateIgnore_
                         break
 
-                        // case StateOBlock_:
-                        //     SHECodeIdx_++ // skip the TokenOBlock_
-                        //     _word = parseSource() // word is a new block
-                        //     _pushWord()
-                        //     TokenState_ = StateIgnore_
-                        // break
-
                         case StateCBlock_:
-                            // SHECodeIdx_++ // skip the TokenCBlock_
                             if (TokenOBLvl_ > 0) {
                                 TokenOBLvl_-- // close the block
                                 _pushPhrase()
@@ -574,6 +569,14 @@ const ExecReserved_ = {
     ".>":           execMax,        // alias
     ".avg":         execAvg,        // average args...
     ".|":           execAvg,        // alias
+    ".true":        execTrue,       // true = "1"
+    ".t":           execTrue,       // alias
+    ".false":       execFalse,      // false = "0"
+    ".f":           execFalse,      // alias
+    ".ran":         execRan,        // random 0-1 or 0-arg1 or pick a random arg
+    ".?":           execRan,        // alias
+    ".h2d":         execH2D,        // hex to decimal
+    ".#":           execH2D,        // alias
 }
 
 
@@ -696,11 +699,17 @@ function execAvg() {
     )
 }
 
+function execH2D() {
+    return execMath1N(
+        (_back, _arg1n)  => {return parseInt(_arg1n, 16)}
+    )
+}
+
 function execMath1N(_doarg1n) { // apply math functions depending of the number of arguments
     evalArgs()
     let _back = 0
     for (_arg1n of getArgs().slice(1)) {
-        _back = _doarg1n(_back, Number(_arg1n))
+        _back = _doarg1n(_back, notNumber(_arg1n) ? _arg1n : Number(_arg1n))
     }
     return _back.toString()
 }
@@ -714,15 +723,38 @@ function execMath2N(_doarg1, _doarg2n) { // apply math functions depending of th
         if (notEmpty(_arg2)) { // math all
             _back = Number(_arg1)
             for (_arg2n of getArgs().slice(2)) {
-                _back = _doarg2n(_back, Number(_arg2n))
+                _back = _doarg2n(_back, notNumber(_arg2n) ? _arg2n : Number(_arg2n))
             }
         } else { // math one
-            _back = _doarg1(_back, Number(_arg1))
+            _back = _doarg1(_back, notNumber(_arg1) ? _arg1 : Number(_arg1))
         }
     }
     return _back.toString()
 }
 
+function execTrue() {
+    return "1"
+}
+
+function execFalse() {
+    return "0"
+}
+
+function execRan() {
+    evalArgs()
+    let _back = Math.random()
+    let _arg1 = getArgN(1) // first arg
+    let _arg2 = getArgN(2) // has more args
+    if (notEmpty(_arg1)) {
+        if (notEmpty(_arg2)) { // pick a random arg
+            let _n = Math.floor(Math.random() * (getArgs().length - 1)) + 1
+            _back = getArgN(_n)
+        } else { // random (floor) from 1-arg1 (included)
+            _back = Math.floor(Math.random() * Number(_arg1)) + 1
+        }
+    }
+    return _back.toString()
+}
 
 
 
