@@ -1,0 +1,9 @@
+.e onet
+.e (.onet 0 0 0)
+.e (.onet 0 1 0)
+.e (.onet 1 1 1)
+.e
+.e onef
+.e (.onef 0 0 0)
+.e (.onef 0 1 0)
+.e (.onef 1 1 1)

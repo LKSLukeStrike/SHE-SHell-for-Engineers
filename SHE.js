@@ -2,6 +2,7 @@
 
 const NodeFS_       = require("node:fs")
 const Colors_       = require("@colors/colors/safe")
+const { type } = require("node:os")
 
 
 // Utils
@@ -458,6 +459,14 @@ function getArg0() {
     return getArgN(0)
 }
 
+function getArg1() {
+    return getArgN(1)
+}
+
+function getArg2() {
+    return getArgN(2)
+}
+
 function setArgs(_value) {
     return StackArgs_.set(_value)
 }
@@ -473,9 +482,27 @@ function setArg0(_value) {
     return setArgN(0, _value)
 }
 
-function evalArgs() {
-    for (_n in getArgs()) {
+function evalArgs0N() {
+    return evalArgsNN(0)
+}
+
+function evalArgs1N() {
+    return evalArgsNN(1)
+}
+
+function evalArgs2N() {
+    return evalArgsNN(2)
+}
+
+function evalArgs3N() {
+    return evalArgsNN(3)
+}
+
+function evalArgsNN(_n) {
+    let _len = getArgs().length
+    while (_n < _len) {
         evalArgN(_n)
+        _n++
     }
     return getArgs()
 }
@@ -539,6 +566,21 @@ function evalAstPhrase(_phrase) {
 }
 
 
+// Exec True/False
+const ExecTrue_  = "1" // or not ExecFalse_
+const ExecFalse_ = "0"
+
+function yesTrue(_back) {
+    return _back != ExecFalse_
+}
+const notTrue = yesFalse
+
+function yesFalse(_back) {
+    return _back == ExecFalse_
+}
+const notFalse = yesTrue
+
+
 // Exec Reserved Functions
 const ExecReserved_ = {
     ".echo":        execEcho,       // echo args...
@@ -577,6 +619,14 @@ const ExecReserved_ = {
     ".?":           execRan,        // alias
     ".h2d":         execH2D,        // hex to decimal
     ".#":           execH2D,        // alias
+    ".onet":        execOneT,       // onetrue cond...
+    ".allt":        execAllT,       // alltrue cond...
+    ".onef":        execOneF,       // onefalse cond...
+    ".allf":        execAllF,       // allfalse cond...
+    ".iftot":       execIfTOT,      // ifthenonetrue then cond...
+    ".ifeot":       execIfEOT,      // ifelseonetrue else cond...
+    ".iftat":       execIfTAT,      // ifthenalltrue then cond...
+    ".ifeat":       execIfEAT,      // ifelsealltrue else cond...
 }
 
 
@@ -590,30 +640,32 @@ function execArg0(_arg0) {
     return ExecReserved_[_arg0]()
 }
 
-function execEcho() {
-    evalArgs()
+// Exec Misc/Strings
+function execEcho() { // echo args
+    evalArgs1N()
     let _back = ""
     _back = getArgs().slice(1).join(" ")
     logOutput(_back)
     return _back
 }
 
-function execJoin() {
-    evalArgs()
+function execJoin() { // join args with a separator
+    evalArgs1N()
     let _back = ""
-    let _arg1 = getArgN(1) // separator
-    if (notEmpty(_arg1)) {
-        _back = getArgs().slice(2).join(_arg1)
+    let _with = getArg1() // separator
+    if (notEmpty(_with)) {
+        _back = getArgs().slice(2).join(_with)
     }
     return _back
 }
 
-function execSet() {
-    evalArgs()
+// Exec Vars
+function execSet() { // set variable(s) to a value
+    evalArgs1N()
     let _back = ""
-    let _arg1 = getArgN(1) // value
-    if (notEmpty(_arg1)) {
-        _back = _arg1
+    let _vval = getArg1() // vars value
+    if (notEmpty(_vval)) {
+        _back = _vval
         for (_var of getArgs().slice(2)) {
             setVar(_var, _back)
         }
@@ -621,8 +673,8 @@ function execSet() {
     return _back
 }
 
-function execGet() {
-    evalArgs()
+function execGet() { // get value of variable(s) (last one)
+    evalArgs1N()
     let _back = ""
     for (_var of getArgs().slice(1)) {
         _back = getVar(_var)
@@ -630,83 +682,100 @@ function execGet() {
     return _back
 }
 
-function execAdd() {
+// Exec Math
+function execAdd() { // add/positive
     return execMath2N(
         (_back, _arg1)  => {return Math.abs(_arg1)},
         (_back, _arg2n) => {return _back + _arg2n}
     )
 }
 
-function execSub() {
+function execSub() { // substract/negative
     return execMath2N(
         (_back, _arg1)  => {return 0 - Math.abs(_arg1)},
         (_back, _arg2n) => {return _back - _arg2n}
     )
 }
 
-function execMul() {
+function execMul() { // multiply
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return _back * _arg2n}
     )
 }
 
-function execDiv() {
+function execDiv() { // divide
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return _back / _arg2n}
     )
 }
 
-function execMod() {
+function execMod() { // modulo
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return _back % _arg2n}
     )
 }
 
-function execPow() {
+function execPow() { // power
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return Math.pow(_back, _arg2n)}
     )
 }
 
-function execSqr() {
+function execSqr() { // squareroot
     return execMath1N(
         (_back, _arg1n)  => {return Math.sqrt(_arg1n)}
     )
 }
 
-function execMin() {
+function execMin() { // minimum
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return _back < _arg2n ? _back : _arg2n}
     )
 }
 
-function execMax() {
+function execMax() { // maximum
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return _back > _arg2n ? _back : _arg2n}
     )
 }
 
-function execAvg() {
+function execAvg() { // average
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return (_back + _arg2n) / 2}
     )
 }
 
-function execH2D() {
+function execH2D() { // hex to dec
     return execMath1N(
         (_back, _arg1n)  => {return parseInt(_arg1n, 16)}
     )
 }
 
+function execRan() { // random number/pick
+    evalArgs1N()
+    let _back = Math.random()
+    let _arg1 = getArg1() // first arg
+    let _arg2 = getArg2() // has more args
+    if (notEmpty(_arg1)) {
+        if (notEmpty(_arg2)) { // pick a random arg
+            let _n = Math.floor(Math.random() * (getArgs().length - 1)) + 1
+            _back = getArgN(_n)
+        } else { // random (floor) from 1-arg1 (included)
+            _back = Math.floor(Math.random() * Number(_arg1)) + 1
+        }
+    }
+    return _back.toString()
+}
+
 function execMath1N(_doarg1n) { // apply math functions depending of the number of arguments
-    evalArgs()
+    evalArgs1N()
     let _back = 0
     for (_arg1n of getArgs().slice(1)) {
         _back = _doarg1n(_back, notNumber(_arg1n) ? _arg1n : Number(_arg1n))
@@ -715,10 +784,10 @@ function execMath1N(_doarg1n) { // apply math functions depending of the number 
 }
 
 function execMath2N(_doarg1, _doarg2n) { // apply math functions depending of the number of arguments
-    evalArgs()
+    evalArgs1N()
     let _back = 0
-    let _arg1 = getArgN(1) // first arg
-    let _arg2 = getArgN(2) // has more args
+    let _arg1 = getArg1() // first arg
+    let _arg2 = getArg2() // has more args
     if (notEmpty(_arg1)) {
         if (notEmpty(_arg2)) { // math all
             _back = Number(_arg1)
@@ -732,30 +801,101 @@ function execMath2N(_doarg1, _doarg2n) { // apply math functions depending of th
     return _back.toString()
 }
 
-function execTrue() {
-    return "1"
+// Exec True/False
+function execTrue() { // true in she
+    return ExecTrue_
 }
 
-function execFalse() {
-    return "0"
+function execFalse() { // false in she
+    return ExecFalse_
 }
 
-function execRan() {
-    evalArgs()
-    let _back = Math.random()
-    let _arg1 = getArgN(1) // first arg
-    let _arg2 = getArgN(2) // has more args
-    if (notEmpty(_arg1)) {
-        if (notEmpty(_arg2)) { // pick a random arg
-            let _n = Math.floor(Math.random() * (getArgs().length - 1)) + 1
-            _back = getArgN(_n)
-        } else { // random (floor) from 1-arg1 (included)
-            _back = Math.floor(Math.random() * Number(_arg1)) + 1
+// Exec Cond One/All
+function execOneT() { // one true
+    return execCond(1, false, true)
+}
+
+function execOneF() { // one false
+    return execCond(1, false, false)
+}
+
+function execAllT() { // all true
+    return execCond(1, true, true)
+}
+
+function execAllF() { // all false
+    return execCond(1, true, false)
+}
+
+// Exec If
+function execIfTOT() { // if then one true
+    let _back = ExecFalse_
+    let _then = getArg1() // then block
+    if (notEmpty(_then)) {
+        _back = execCond(2, false, true)
+        if (yesTrue(_back)) {
+            _back = evalAst(_then)
         }
     }
-    return _back.toString()
+    return _back
 }
 
+function execIfEOT() { // if else one true
+    let _back = ExecFalse_
+    let _else = getArg1() // else block
+    if (notEmpty(_else)) {
+        _back = execCond(2, false, false)
+        if (yesTrue(_back)) {
+            _back = evalAst(_else)
+        }
+    }
+    return _back
+}
+
+function execIfTAT() { // if then all true
+    let _back = ExecFalse_
+    let _then = getArg1() // then block
+    if (notEmpty(_then)) {
+        _back = execCond(2, true, true)
+        if (yesTrue(_back)) {
+            _back = evalAst(_then)
+        }
+    }
+    return _back
+}
+
+function execIfEAT() { // if else all true
+    let _back = ExecFalse_
+    let _else = getArg1() // else block
+    if (notEmpty(_else)) {
+        _back = execCond(2, true, false)
+        if (yesTrue(_back)) {
+            _back = evalAst(_else)
+        }
+    }
+    return _back
+}
+
+function execCond(_n=1, _all=false, _cond=true) { // check if one/all arg from _n replies to a condition (true/false)
+    let _back = ExecFalse_
+    let _len = getArgs().length
+    while (_n < _len) {
+        let _yestrue = yesTrue(evalArgN(_n))
+        log(_yestrue)
+        if (_all) { // all
+            _back = ExecTrue_
+            if (_yestrue != _cond) {
+                return ExecFalse_
+            }
+        } else { // one
+            if (_yestrue == _cond) {
+                return ExecTrue_
+            }
+        }
+        _n++
+    }
+    return _back
+}
 
 
 // Main
