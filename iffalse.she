@@ -1,0 +1,25 @@
+.e
+.e iftof
+.e (.iftof THEN 0 0 0)
+.e (.iftof THEN 0 1 0)
+.e (.iftof THEN 1 1 1)
+.e
+.e ifeof
+.e (.ifeof ELSE 0 0 0)
+.e (.ifeof ELSE 0 1 0)
+.e (.ifeof ELSE 1 1 1)
+.e
+.e iftaf
+.e (.iftaf THEN 0 0 0)
+.e (.iftaf THEN 0 1 0)
+.e (.iftaf THEN 1 1 1)
+.e
+.e ifeaf
+.e (.ifeaf ELSE 0 0 0)
+.e (.ifeaf ELSE 0 1 0)
+.e (.ifeaf ELSE 1 1 1)
+.e ---
+.e (.iftof a)
+.e (.ifeof b)
+.e (.iftaf c)
+.e (.ifeaf d)

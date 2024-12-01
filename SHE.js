@@ -627,6 +627,10 @@ const ExecReserved_ = {
     ".ifeot":       execIFEOT,      // ifelseonetrue else cond...
     ".iftat":       execIFTAT,      // ifthenalltrue then cond...
     ".ifeat":       execIFEAT,      // ifelsealltrue else cond...
+    ".iftof":       execIFTOF,      // ifthenonefalse then cond...
+    ".ifeof":       execIFEOF,      // ifelseonefalse else cond...
+    ".iftaf":       execIFTAF,      // ifthenallfalse then cond...
+    ".ifeaf":       execIFEAF,      // ifelseallfalse else cond...
 }
 
 
@@ -864,6 +868,44 @@ function execIFEAT() { // if else all true
     return _back
 }
 
+function execIFTOF() { // if then one false
+    let _back = execCond(2, false, false)
+    let _then = getArg1() // then block
+    if (yesTrue(_back) && notEmpty(_then)) {
+        _back = evalAst(_then)
+    }
+    return _back
+}
+
+function execIFEOF() { // if else one false
+    let _back = execCond(2, false, false)
+    let _else = getArg1() // else block
+    if (notTrue(_back) && notEmpty(_else)) {
+        _back = evalAst(_else)
+    }
+    return _back
+}
+
+function execIFTAF() { // if then all false
+    let _back = execCond(2, true, false)
+    let _then = getArg1() // then block
+    if (yesTrue(_back) && notEmpty(_then)) {
+        _back = evalAst(_then)
+    }
+    return _back
+}
+
+function execIFEAF() { // if else all false
+    let _back = execCond(2, true, false)
+    let _else = getArg1() // else block
+    if (notTrue(_back) && notEmpty(_else)) {
+        _back = evalAst(_else)
+    }
+    return _back
+}
+
+
+// Exec Cond
 function execCond(_n=1, _all=false, _cond=true) { // check if one/all arg from _n replies to a condition (true/false)
     let _back = execFALSE_
     let _len = getArgs().length
