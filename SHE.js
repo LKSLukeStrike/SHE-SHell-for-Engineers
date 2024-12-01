@@ -567,66 +567,66 @@ function evalAstPhrase(_phrase) {
 
 
 // Exec True/False
-const ExecTrue_  = "1" // or not ExecFalse_
-const ExecFalse_ = "0"
+const execTRUE_  = "1" // or not execFALSE_
+const execFALSE_ = "0"
 
 function yesTrue(_back) {
-    return _back != ExecFalse_
+    return _back != execFALSE_
 }
 const notTrue = yesFalse
 
 function yesFalse(_back) {
-    return _back == ExecFalse_
+    return _back == execFALSE_
 }
 const notFalse = yesTrue
 
 
 // Exec Reserved Functions
 const ExecReserved_ = {
-    ".echo":        execEcho,       // echo args...
-    ".e":           execEcho,       // alias
-    ".join":        execJoin,       // join separator args...
-    ".j":           execJoin,       // alias
-    ".set":         execSet,        // set value vars...
-    ".!":           execSet,        // alias
-    ".get":         execGet,        // get vars...
-    ".@":           execGet,        // alias
-    ".add":         execAdd,        // add/positive args...
-    ".+":           execAdd,        // alias
-    ".sub":         execSub,        // substact/negative args...
-    ".-":           execSub,        // alias
-    ".mul":         execMul,        // multiply args...
-    ".*":           execMul,        // alias
-    ".div":         execDiv,        // divide args...
-    "./":           execDiv,        // alias
-    ".mod":         execMod,        // modulo args...
-    ".%":           execMod,        // alias
-    ".pow":         execPow,        // power args...
-    ".^":           execPow,        // alias
-    ".sqr":         execSqr,        // squareroot args...
-    ".x":           execSqr,        // alias
-    ".min":         execMin,        // minimum args...
-    ".<":           execMin,        // alias
-    ".max":         execMax,        // maximum args...
-    ".>":           execMax,        // alias
-    ".avg":         execAvg,        // average args...
-    ".|":           execAvg,        // alias
-    ".true":        execTrue,       // true = "1"
-    ".t":           execTrue,       // alias
-    ".false":       execFalse,      // false = "0"
-    ".f":           execFalse,      // alias
-    ".ran":         execRan,        // random 0-1 or 0-arg1 or pick a random arg
-    ".?":           execRan,        // alias
+    ".echo":        execECHO,       // echo args...
+    ".e":           execECHO,       // alias
+    ".join":        execJOIN,       // join separator args...
+    ".j":           execJOIN,       // alias
+    ".set":         execSET,        // set value vars...
+    ".!":           execSET,        // alias
+    ".get":         execGET,        // get vars...
+    ".@":           execGET,        // alias
+    ".add":         execADD,        // add/positive args...
+    ".+":           execADD,        // alias
+    ".sub":         execSUB,        // substact/negative args...
+    ".-":           execSUB,        // alias
+    ".mul":         execMUL,        // multiply args...
+    ".*":           execMUL,        // alias
+    ".div":         execDIV,        // divide args...
+    "./":           execDIV,        // alias
+    ".mod":         execMOD,        // modulo args...
+    ".%":           execMOD,        // alias
+    ".pow":         execPOW,        // power args...
+    ".^":           execPOW,        // alias
+    ".sqr":         execSQR,        // squareroot args...
+    ".x":           execSQR,        // alias
+    ".min":         execMIN,        // minimum args...
+    ".<":           execMIN,        // alias
+    ".max":         execMAX,        // maximum args...
+    ".>":           execMAX,        // alias
+    ".avg":         execAVG,        // average args...
+    ".|":           execAVG,        // alias
+    ".true":        execTRUE,       // true = "1"
+    ".t":           execTRUE,       // alias
+    ".false":       execFALSE,      // false = "0"
+    ".f":           execFALSE,      // alias
+    ".ran":         execRAN,        // random 0-1 or 0-arg1 or pick a random arg
+    ".?":           execRAN,        // alias
     ".h2d":         execH2D,        // hex to decimal
     ".#":           execH2D,        // alias
-    ".onet":        execOneT,       // onetrue cond...
-    ".allt":        execAllT,       // alltrue cond...
-    ".onef":        execOneF,       // onefalse cond...
-    ".allf":        execAllF,       // allfalse cond...
-    ".iftot":       execIfTOT,      // ifthenonetrue then cond...
-    ".ifeot":       execIfEOT,      // ifelseonetrue else cond...
-    ".iftat":       execIfTAT,      // ifthenalltrue then cond...
-    ".ifeat":       execIfEAT,      // ifelsealltrue else cond...
+    ".onet":        execONET,       // onetrue cond...
+    ".allt":        execALLT,       // alltrue cond...
+    ".onef":        execONEF,       // onefalse cond...
+    ".allf":        execALLF,       // allfalse cond...
+    ".iftot":       execIFTOT,      // ifthenonetrue then cond...
+    ".ifeot":       execIFEOT,      // ifelseonetrue else cond...
+    ".iftat":       execIFTAT,      // ifthenalltrue then cond...
+    ".ifeat":       execIFEAT,      // ifelsealltrue else cond...
 }
 
 
@@ -641,7 +641,7 @@ function execArg0(_arg0) {
 }
 
 // Exec Misc/Strings
-function execEcho() { // echo args
+function execECHO() { // echo args
     evalArgs1N()
     let _back = ""
     _back = getArgs().slice(1).join(" ")
@@ -649,7 +649,7 @@ function execEcho() { // echo args
     return _back
 }
 
-function execJoin() { // join args with a separator
+function execJOIN() { // join args with a separator
     evalArgs1N()
     let _back = ""
     let _with = getArg1() // separator
@@ -660,7 +660,7 @@ function execJoin() { // join args with a separator
 }
 
 // Exec Vars
-function execSet() { // set variable(s) to a value
+function execSET() { // set variable(s) to a value
     evalArgs1N()
     let _back = ""
     let _vval = getArg1() // vars value
@@ -673,7 +673,7 @@ function execSet() { // set variable(s) to a value
     return _back
 }
 
-function execGet() { // get value of variable(s) (last one)
+function execGET() { // get value of variable(s) (last one)
     evalArgs1N()
     let _back = ""
     for (_var of getArgs().slice(1)) {
@@ -683,69 +683,69 @@ function execGet() { // get value of variable(s) (last one)
 }
 
 // Exec Math
-function execAdd() { // add/positive
+function execADD() { // add/positive
     return execMath2N(
         (_back, _arg1)  => {return Math.abs(_arg1)},
         (_back, _arg2n) => {return _back + _arg2n}
     )
 }
 
-function execSub() { // substract/negative
+function execSUB() { // substract/negative
     return execMath2N(
         (_back, _arg1)  => {return 0 - Math.abs(_arg1)},
         (_back, _arg2n) => {return _back - _arg2n}
     )
 }
 
-function execMul() { // multiply
+function execMUL() { // multiply
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return _back * _arg2n}
     )
 }
 
-function execDiv() { // divide
+function execDIV() { // divide
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return _back / _arg2n}
     )
 }
 
-function execMod() { // modulo
+function execMOD() { // modulo
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return _back % _arg2n}
     )
 }
 
-function execPow() { // power
+function execPOW() { // power
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return Math.pow(_back, _arg2n)}
     )
 }
 
-function execSqr() { // squareroot
+function execSQR() { // squareroot
     return execMath1N(
         (_back, _arg1n)  => {return Math.sqrt(_arg1n)}
     )
 }
 
-function execMin() { // minimum
+function execMIN() { // minimum
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return _back < _arg2n ? _back : _arg2n}
     )
 }
 
-function execMax() { // maximum
+function execMAX() { // maximum
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return _back > _arg2n ? _back : _arg2n}
     )
 }
 
-function execAvg() { // average
+function execAVG() { // average
     return execMath2N(
         (_back, _arg1)  => {return _arg1},
         (_back, _arg2n) => {return (_back + _arg2n) / 2}
@@ -758,7 +758,7 @@ function execH2D() { // hex to dec
     )
 }
 
-function execRan() { // random number/pick
+function execRAN() { // random number/pick
     evalArgs1N()
     let _back = Math.random()
     let _arg1 = getArg1() // first arg
@@ -802,94 +802,81 @@ function execMath2N(_doarg1, _doarg2n) { // apply math functions depending of th
 }
 
 // Exec True/False
-function execTrue() { // true in she
-    return ExecTrue_
+function execTRUE() { // true in she
+    return execTRUE_
 }
 
-function execFalse() { // false in she
-    return ExecFalse_
+function execFALSE() { // false in she
+    return execFALSE_
 }
 
 // Exec Cond One/All
-function execOneT() { // one true
+function execONET() { // one true
     return execCond(1, false, true)
 }
 
-function execOneF() { // one false
+function execONEF() { // one false
     return execCond(1, false, false)
 }
 
-function execAllT() { // all true
+function execALLT() { // all true
     return execCond(1, true, true)
 }
 
-function execAllF() { // all false
+function execALLF() { // all false
     return execCond(1, true, false)
 }
 
 // Exec If
-function execIfTOT() { // if then one true
-    let _back = ExecFalse_
+function execIFTOT() { // if then one true
+    let _back = execCond(2, false, true)
     let _then = getArg1() // then block
-    if (notEmpty(_then)) {
-        _back = execCond(2, false, true)
-        if (yesTrue(_back)) {
-            _back = evalAst(_then)
-        }
+    if (yesTrue(_back) && notEmpty(_then)) {
+        _back = evalAst(_then)
     }
     return _back
 }
 
-function execIfEOT() { // if else one true
-    let _back = ExecFalse_
+function execIFEOT() { // if else one true
+    let _back = execCond(2, false, true)
     let _else = getArg1() // else block
-    if (notEmpty(_else)) {
-        _back = execCond(2, false, false)
-        if (yesTrue(_back)) {
-            _back = evalAst(_else)
-        }
+    if (notTrue(_back) && notEmpty(_else)) {
+        _back = evalAst(_else)
     }
     return _back
 }
 
-function execIfTAT() { // if then all true
-    let _back = ExecFalse_
+function execIFTAT() { // if then all true
+    let _back = execCond(2, true, true)
     let _then = getArg1() // then block
-    if (notEmpty(_then)) {
-        _back = execCond(2, true, true)
-        if (yesTrue(_back)) {
-            _back = evalAst(_then)
-        }
+    if (yesTrue(_back) && notEmpty(_then)) {
+        _back = evalAst(_then)
     }
     return _back
 }
 
-function execIfEAT() { // if else all true
-    let _back = ExecFalse_
+function execIFEAT() { // if else all true
+    let _back = execCond(2, true, true)
     let _else = getArg1() // else block
-    if (notEmpty(_else)) {
-        _back = execCond(2, true, false)
-        if (yesTrue(_back)) {
-            _back = evalAst(_else)
-        }
+    if (notTrue(_back) && notEmpty(_else)) {
+        _back = evalAst(_else)
     }
     return _back
 }
 
 function execCond(_n=1, _all=false, _cond=true) { // check if one/all arg from _n replies to a condition (true/false)
-    let _back = ExecFalse_
+    let _back = execFALSE_
     let _len = getArgs().length
     while (_n < _len) {
         let _yestrue = yesTrue(evalArgN(_n))
-        log(_yestrue)
         if (_all) { // all
-            _back = ExecTrue_
+            _back = execTRUE_
             if (_yestrue != _cond) {
-                return ExecFalse_
+                return execFALSE_
             }
         } else { // one
             if (_yestrue == _cond) {
-                return ExecTrue_
+                return execTRUE_
             }
         }
         _n++

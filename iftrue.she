@@ -1,0 +1,25 @@
+.e
+.e iftot
+.e (.iftot THEN 0 0 0)
+.e (.iftot THEN 0 1 0)
+.e (.iftot THEN 1 1 1)
+.e
+.e ifeot
+.e (.ifeot ELSE 0 0 0)
+.e (.ifeot ELSE 0 1 0)
+.e (.ifeot ELSE 1 1 1)
+.e
+.e iftat
+.e (.iftat THEN 0 0 0)
+.e (.iftat THEN 0 1 0)
+.e (.iftat THEN 1 1 1)
+.e
+.e ifeat
+.e (.ifeat ELSE 0 0 0)
+.e (.ifeat ELSE 0 1 0)
+.e (.ifeat ELSE 1 1 1)
+.e ---
+.e (.iftot a)
+.e (.ifeot b)
+.e (.iftat c)
+.e (.ifeat d)
