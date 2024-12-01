@@ -1,0 +1,85 @@
+
+[36mSource:[39m
+[90m.e[39m
+[90m.e iftof[39m
+[90m.e (.iftof THEN 0 0 0)[39m
+[90m.e (.iftof THEN 0 1 0)[39m
+[90m.e (.iftof THEN 1 1 1)[39m
+[90m.e[39m
+[90m.e ifeof[39m
+[90m.e (.ifeof ELSE 0 0 0)[39m
+[90m.e (.ifeof ELSE 0 1 0)[39m
+[90m.e (.ifeof ELSE 1 1 1)[39m
+[90m.e[39m
+[90m.e iftaf[39m
+[90m.e (.iftaf THEN 0 0 0)[39m
+[90m.e (.iftaf THEN 0 1 0)[39m
+[90m.e (.iftaf THEN 1 1 1)[39m
+[90m.e[39m
+[90m.e ifeaf[39m
+[90m.e (.ifeaf ELSE 0 0 0)[39m
+[90m.e (.ifeaf ELSE 0 1 0)[39m
+[90m.e (.ifeaf ELSE 1 1 1)[39m
+[90m.e ---[39m
+[90m.e (.iftof a)[39m
+[90m.e (.ifeof b)[39m
+[90m.e (.iftaf c)[39m
+[90m.e (.ifeaf d)[39m
+[90m[39m
+
+[36mParsing ...[39m
+
+[36mObject:[39m
+[90m[".e"][39m
+[90m[".e","iftof"][39m
+[90m[".e",[[".iftof","THEN","0","0","0"]]][39m
+[90m[".e",[[".iftof","THEN","0","1","0"]]][39m
+[90m[".e",[[".iftof","THEN","1","1","1"]]][39m
+[90m[".e"][39m
+[90m[".e","ifeof"][39m
+[90m[".e",[[".ifeof","ELSE","0","0","0"]]][39m
+[90m[".e",[[".ifeof","ELSE","0","1","0"]]][39m
+[90m[".e",[[".ifeof","ELSE","1","1","1"]]][39m
+[90m[".e"][39m
+[90m[".e","iftaf"][39m
+[90m[".e",[[".iftaf","THEN","0","0","0"]]][39m
+[90m[".e",[[".iftaf","THEN","0","1","0"]]][39m
+[90m[".e",[[".iftaf","THEN","1","1","1"]]][39m
+[90m[".e"][39m
+[90m[".e","ifeaf"][39m
+[90m[".e",[[".ifeaf","ELSE","0","0","0"]]][39m
+[90m[".e",[[".ifeaf","ELSE","0","1","0"]]][39m
+[90m[".e",[[".ifeaf","ELSE","1","1","1"]]][39m
+[90m[".e","---"][39m
+[90m[".e",[[".iftof","a"]]][39m
+[90m[".e",[[".ifeof","b"]]][39m
+[90m[".e",[[".iftaf","c"]]][39m
+[90m[".e",[[".ifeaf","d"]]][39m
+
+[36mResult:[39m
+
+[31miftof[39m
+[31mTHEN[39m
+[31mTHEN[39m
+[31m0[39m
+
+[31mifeof[39m
+[31m1[39m
+[31m1[39m
+[31mELSE[39m
+
+[31miftaf[39m
+[31mTHEN[39m
+[31m0[39m
+[31m0[39m
+
+[31mifeaf[39m
+[31m1[39m
+[31mELSE[39m
+[31mELSE[39m
+[31m---[39m
+[31m0[39m
+[31mb[39m
+[31m0[39m
+[31md[39m
+[32m<"d">[39m

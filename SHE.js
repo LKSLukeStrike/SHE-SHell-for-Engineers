@@ -623,14 +623,18 @@ const ExecReserved_ = {
     ".allt":        execALLT,       // alltrue cond...
     ".onef":        execONEF,       // onefalse cond...
     ".allf":        execALLF,       // allfalse cond...
-    ".iftot":       execIFTOT,      // ifthenonetrue then cond...
-    ".ifeot":       execIFEOT,      // ifelseonetrue else cond...
-    ".iftat":       execIFTAT,      // ifthenalltrue then cond...
-    ".ifeat":       execIFEAT,      // ifelsealltrue else cond...
-    ".iftof":       execIFTOF,      // ifthenonefalse then cond...
-    ".ifeof":       execIFEOF,      // ifelseonefalse else cond...
-    ".iftaf":       execIFTAF,      // ifthenallfalse then cond...
-    ".ifeaf":       execIFEAF,      // ifelseallfalse else cond...
+    ".iftot":       execIFTOT,      // if then onetrue...
+    ".ifeot":       execIFEOT,      // if else onetrue...
+    ".iftat":       execIFTAT,      // if then alltrue...
+    ".ifeat":       execIFEAT,      // if else alltrue...
+    ".iftof":       execIFTOF,      // if then onefalse...
+    ".ifeof":       execIFEOF,      // if else onefalse...
+    ".iftaf":       execIFTAF,      // if then allfalse...
+    ".ifeaf":       execIFEAF,      // if else allfalse...
+    ".ifteot":      execIFTEOT,     // if then else onetrue...
+    ".ifteof":      execIFTEOF,     // if then else onefalse...
+    ".ifteat":      execIFTEAT,		// if then else alltrue...
+    ".ifteaf":      execIFTEAF,		// if then else allfalse...
 }
 
 
@@ -815,93 +819,109 @@ function execFALSE() { // false in she
 }
 
 // Exec Cond One/All
-function execONET() { // one true
+function execONET() { // onetrue cond...
     return execCond(1, false, true)
 }
 
-function execONEF() { // one false
+function execONEF() { // onefalse cond...
     return execCond(1, false, false)
 }
 
-function execALLT() { // all true
+function execALLT() { // alltrue cond...
     return execCond(1, true, true)
 }
 
-function execALLF() { // all false
+function execALLF() { // allfalse cond...
     return execCond(1, true, false)
 }
 
 // Exec If
-function execIFTOT() { // if then one true
+function execIFTOT() { // if then onetrue...
     let _back = execCond(2, false, true)
     let _then = getArg1() // then block
     if (yesTrue(_back) && notEmpty(_then)) {
-        _back = evalAst(_then)
+        return evalAst(_then)
     }
     return _back
 }
 
-function execIFEOT() { // if else one true
+function execIFEOT() { // if else onetrue...
     let _back = execCond(2, false, true)
     let _else = getArg1() // else block
     if (notTrue(_back) && notEmpty(_else)) {
-        _back = evalAst(_else)
+        return evalAst(_else)
     }
     return _back
 }
 
-function execIFTAT() { // if then all true
+function execIFTAT() { // if then alltrue...
     let _back = execCond(2, true, true)
     let _then = getArg1() // then block
     if (yesTrue(_back) && notEmpty(_then)) {
-        _back = evalAst(_then)
+        return evalAst(_then)
     }
     return _back
 }
 
-function execIFEAT() { // if else all true
+function execIFEAT() { // if else alltrue...
     let _back = execCond(2, true, true)
     let _else = getArg1() // else block
     if (notTrue(_back) && notEmpty(_else)) {
-        _back = evalAst(_else)
+        return evalAst(_else)
     }
     return _back
 }
 
-function execIFTOF() { // if then one false
+function execIFTOF() { // if then onefalse...
     let _back = execCond(2, false, false)
     let _then = getArg1() // then block
     if (yesTrue(_back) && notEmpty(_then)) {
-        _back = evalAst(_then)
+        return evalAst(_then)
     }
     return _back
 }
 
-function execIFEOF() { // if else one false
+function execIFEOF() { // if else onefalse...
     let _back = execCond(2, false, false)
     let _else = getArg1() // else block
     if (notTrue(_back) && notEmpty(_else)) {
-        _back = evalAst(_else)
+        return evalAst(_else)
     }
     return _back
 }
 
-function execIFTAF() { // if then all false
+function execIFTAF() { // if then allfalse...
     let _back = execCond(2, true, false)
     let _then = getArg1() // then block
     if (yesTrue(_back) && notEmpty(_then)) {
-        _back = evalAst(_then)
+        return evalAst(_then)
     }
     return _back
 }
 
-function execIFEAF() { // if else all false
+function execIFEAF() { // if else allfalse...
     let _back = execCond(2, true, false)
     let _else = getArg1() // else block
     if (notTrue(_back) && notEmpty(_else)) {
-        _back = evalAst(_else)
+        return evalAst(_else)
     }
     return _back
+}
+
+function execIFTEOT() { // if then else onetrue...
+    return execIfThenElse(execCond(3, false, true))
+}
+
+function execIFTEOF() { // if then else onefalse...
+    return execIfThenElse(execCond(3, false, false))
+}
+
+function execIFTEAT() { // if then else alltrue...
+    return execIfThenElse(execCond(3, true, true))
+}
+
+function execIFTEAF() { // if then else allfalse...
+    return execIfThenElse(execCond(3, true, false))
 }
 
 
@@ -925,6 +945,21 @@ function execCond(_n=1, _all=false, _cond=true) { // check if one/all arg from _
     }
     return _back
 }
+
+
+// Exec If Then Else
+function execIfThenElse(_back) { // return then or else depending on back
+    let _then = getArg1() // then block
+    let _else = getArg2() // else block
+    if (yesTrue(_back) && notEmpty(_then)) {
+        return evalAst(_then)
+    }
+    if (notTrue(_back) && notEmpty(_else)) {
+        return evalAst(_else)
+    }	
+    return _back
+}
+
 
 
 // Main

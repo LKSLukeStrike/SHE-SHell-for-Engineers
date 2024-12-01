@@ -1,0 +1,30 @@
+.e
+.e ifteot
+.e (.ifteot THEN ELSE 0 0 0)
+.e (.ifteot THEN ELSE 0 1 0)
+.e (.ifteot THEN ELSE 1 1 1)
+.e
+.e ifteof
+.e (.ifteof THEN ELSE 0 0 0)
+.e (.ifteof THEN ELSE 0 1 0)
+.e (.ifteof THEN ELSE 1 1 1)
+.e
+.e ifteat
+.e (.ifteat THEN ELSE 0 0 0)
+.e (.ifteat THEN ELSE 0 1 0)
+.e (.ifteat THEN ELSE 1 1 1)
+.e
+.e ifteaf
+.e (.ifteaf THEN ELSE 0 0 0)
+.e (.ifteaf THEN ELSE 0 1 0)
+.e (.ifteaf THEN ELSE 1 1 1)
+.e ---
+.e (.ifteot a b)
+.e (.ifteof c d)
+.e (.ifteat e f)
+.e (.ifteaf g h)
+.e ---
+.e (.ifteot a b 1)
+.e (.ifteof c d 1)
+.e (.ifteat e f 1)
+.e (.ifteaf g h 1)
