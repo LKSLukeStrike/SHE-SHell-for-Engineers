@@ -2,10 +2,15 @@
 
 const NodeFS_       = require("node:fs")
 const Colors_       = require("@colors/colors/safe")
-const { type } = require("node:os")
 
 
-// Utils
+// Utils Script Args
+function argDefault(_index, _default) {
+    return process.argv[_index] ? process.argv[_index] : _default
+}
+
+
+// Utils Log
 const log = console.log
 
 function logOK() {
@@ -47,13 +52,34 @@ function logFollow(_message) {
 }
 
 function logOutput(_message) {
-    log(Colors_.red(_message))
+    if (true) {
+        log(Colors_.red(_message))
+    }
 }
 
-function argDefault(_index, _default) {
-    return process.argv[_index] ? process.argv[_index] : _default
+function logInside(_message) {
+    if (true) {
+        log(Colors_.magenta(_message))
+    }
 }
 
+function logStack(_stack) {
+    if (true) {
+        for (_lvl in _stack) {
+            logInside(_lvl + "\t" + _stack[_lvl])
+        }
+    }
+}
+
+function logStackArg() {
+    if (true) {
+        logInside("<Stack Args>")
+        logStack(StackArgs_.items())
+    }
+}
+
+
+// Utils Checks
 function notEmpty(_thing) {
     return _thing != undefined
 }
@@ -64,36 +90,37 @@ function notNumber(_thing) {
 
 
 class Stack {
+    #items = []
+
     constructor() {
-        this.items = []
     }
 
     clear() {
-        return this.items = []
+        return this.#items = []
     }
 
     length() {
-        return this.items.length
+        return this.#items.length
     }
 
-    value() {
-        return this.items
+    items() {
+        return this.#items
     }
 
     push(_item) {
-        return this.items.push(_item)
+        return this.#items.push(_item)
     }
 
     pop() {
-        return this.items.pop()
+        return this.#items.pop()
     }
 
     set(_item) {
-        return this.items[this.items.length - 1] = _item
+        return this.#items[this.#items.length - 1] = _item
     }
 
     get() {
-        return this.items[this.items.length - 1]
+        return this.#items[this.#items.length - 1]
     }
 }
 
@@ -429,7 +456,7 @@ const StackBack_ = new Stack() // return value
 // Eval Utils
 // Env
 function pushEnv() { // push a new env level and return the level
-    const _result = StackBack_.length() + 1
+    const _result = StackBack_.length() // 0 is the global env level
     StackArgs_.push([])
     StackFcts_.push({})
     StackVars_.push({})
@@ -444,6 +471,10 @@ function popEnv() { // pop last env and return the last return value
     StackVars_.pop()
     StackBack_.pop()
     return _result
+}
+
+function lvlEnv() { // return the (parent) env level
+    return (StackBack_.length() - 1).toString()
 }
 
 // Args
@@ -532,7 +563,7 @@ function setVar(_var, _value) {
 
 function getVar(_var) {
     let _back = ""
-    let _stackvarsreversed = StackVars_.value().toReversed()
+    let _stackvarsreversed = StackVars_.items().toReversed()
     for (_vars of _stackvarsreversed) { // try to find the var at any top down level
         if (_vars.hasOwnProperty(_var)) {
             _back = _vars[_var]
@@ -635,6 +666,7 @@ const ExecReserved_ = {
     ".ifteof":      execIFTEOF,     // if then else onefalse...
     ".ifteat":      execIFTEAT,		// if then else alltrue...
     ".ifteaf":      execIFTEAF,		// if then else allfalse...
+    ".lvl":         execLVL,        // current env level
 }
 
 
@@ -958,6 +990,13 @@ function execIfThenElse(_back) { // return then or else depending on back
         return evalAst(_else)
     }	
     return _back
+}
+
+
+// Exec Blocks
+function execLVL() { // current env level
+    logStackArg()
+    return lvlEnv()
 }
 
 
