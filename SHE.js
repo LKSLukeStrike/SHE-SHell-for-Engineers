@@ -1010,10 +1010,22 @@ function execLVL() { // current env level adjusted by nums...
 
 function execDO() { // do block args...
     evalArgs2N()
-    log(getArg0())
-    log(getArgs().slice(2))
-    // pushEnv()
-
+    let _back  = ""
+    // let _arg0  = getArg0()
+    let _block = getArg1()
+    // let _arg2n = getArgs().slice(2)
+    // let _args  = [].concat(_arg0, _arg2n)
+    // log(_arg0)
+    // log(_arg2n)
+    // log(_args)
+    if (notEmpty(_block)) {
+        let _args  = [].concat(getArg0(), getArgs().slice(2))
+        pushEnv()
+        setArgs(_args)
+        setBack(evalAst(_block))
+        return popEnv()
+    }
+    return _back
 }
 
 // Main
