@@ -71,7 +71,7 @@ function logStack(_stack) {
     }
 }
 
-function logStackArg() {
+function logStackArgs() {
     if (true) {
         logInside("<Stack Args>")
         logStack(StackArgs_.items())
@@ -241,6 +241,8 @@ function parseSource() {
                             SHECodeIdx_++ // skip the TokenOBlock_
                             TokenOBLvl_++ // enter a new block
                             _word = parseSource() // word is a new block
+                            _word = _word ? _word : [] // handle empty blocks
+                            // log(typeof _word)
                             _pushWord()
                             TokenState_ = StateIgnore_
                         break
@@ -666,7 +668,8 @@ const ExecReserved_ = {
     ".ifteof":      execIFTEOF,     // if then else onefalse...
     ".ifteat":      execIFTEAT,		// if then else alltrue...
     ".ifteaf":      execIFTEAF,		// if then else allfalse...
-    ".lvl":         execLVL,        // current env level
+    ".lvl":         execLVL,        // current env level adjusted by nums...
+    ".do":          execDO,         // do block args...
 }
 
 
@@ -869,6 +872,7 @@ function execALLF() { // allfalse cond...
 
 // Exec If
 function execIFTOT() { // if then onetrue...
+    // logStackArgs()
     let _back = execCond(2, false, true)
     let _then = getArg1() // then block
     if (yesTrue(_back) && notEmpty(_then)) {
@@ -994,9 +998,9 @@ function execIfThenElse(_back) { // return then or else depending on back
 
 
 // Exec Blocks
-function execLVL() { // current env level
+function execLVL() { // current env level adjusted by nums...
     evalArgs1N()
-    logStackArg()
+    logStackArgs()
     let _back = lvlEnv()
     for (_arg1n of getArgs().slice(1)) {
         _back = _back + Number(_arg1n)
@@ -1004,7 +1008,13 @@ function execLVL() { // current env level
     return _back.toString()
 }
 
+function execDO() { // do block args...
+    evalArgs2N()
+    log(getArg0())
+    log(getArgs().slice(2))
+    // pushEnv()
 
+}
 
 // Main
 logAction("Source:")
