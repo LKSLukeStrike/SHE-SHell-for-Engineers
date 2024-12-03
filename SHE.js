@@ -474,7 +474,7 @@ function popEnv() { // pop last env and return the last return value
 }
 
 function lvlEnv() { // return the (parent) env level
-    return (StackBack_.length() - 1).toString()
+    return StackBack_.length() - 1
 }
 
 // Args
@@ -995,8 +995,13 @@ function execIfThenElse(_back) { // return then or else depending on back
 
 // Exec Blocks
 function execLVL() { // current env level
+    evalArgs1N()
     logStackArg()
-    return lvlEnv()
+    let _back = lvlEnv()
+    for (_arg1n of getArgs().slice(1)) {
+        _back = _back + Number(_arg1n)
+    }
+    return _back.toString()
 }
 
 

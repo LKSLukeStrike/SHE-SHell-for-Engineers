@@ -1,5 +1,2 @@
-.lvl
-.lvl
-.e (.lvl ; .lvl)
-.lvl
-.e (.sub (.join "" (.lvl)) 3)
+.lvl 
+.e (.lvl -1)
